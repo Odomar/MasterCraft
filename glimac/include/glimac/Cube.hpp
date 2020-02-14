@@ -8,7 +8,7 @@ namespace glimac {
 
     class Cube {
         // Alloue et construit les données (implantation dans le .cpp)
-        void build(int texTop, int texBottom, int texSide);
+        void build(const std::pair<float, float> texCoords[6]);
         void build();
 
     public:
@@ -16,8 +16,8 @@ namespace glimac {
         Cube(): m_nVertexCount(36) {
             build(); // Construction (voir le .cpp)
         }
-        Cube(int texTop, int texBottom, int texSide): m_nVertexCount(36) {
-            build(texTop, texBottom, texSide); // Construction (voir le .cpp)
+        explicit Cube(const std::pair<float, float> texCoords[6]): m_nVertexCount(36) {
+            build(texCoords); // Construction (voir le .cpp)
         }
 
         // Renvoit le pointeur vers les données

@@ -20,6 +20,7 @@
 #include <glimac/Chunk.hpp>
 #include <glimac/Color.hpp>
 #include <glimac/CubeProgram.hpp>
+#include <glimac/Monster.hpp>
 
 using namespace glimac;
 using namespace std;
@@ -82,6 +83,12 @@ int main(int argc, char** argv) {
         std::cerr << "Can't load night's textures" << std::endl;
         return EXIT_FAILURE;
     }
+    // Day sky texture loading
+    std::shared_ptr<Image> monster = loadImage("../MasterCraft/Mastercraft/assets/textures/monster.png");
+//    if(monster == NULL) {
+//        std::cerr << "Can't load monster's textures" << std::endl;
+//        return EXIT_FAILURE;
+//    }
 
     glm::vec4* terrainPixels = terrain->getPixels();
     glm::vec4* heightMapPixels = heightMap->getPixels();
@@ -179,6 +186,31 @@ int main(int argc, char** argv) {
             k++;
         }
     }
+
+	Monster mons(W/2 + 5, heightMap2DArray[W/2 + 5][H/2] + 3, H/2);
+	mons.initTextures(monster);
+
+	Cube monsterCube(Monster::textureCoord);
+	// n is the same
+	const ShapeVertex* monsterVertices = monsterCube.getDataPointer();
+	GLuint monsterVBO;
+	glGenBuffers(1, &monsterVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, monsterVBO);
+	glBufferData(GL_ARRAY_BUFFER, n * sizeof(ShapeVertex), monsterVertices, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	GLuint monsterVAO;
+	glGenVertexArrays(1, &monsterVAO);
+	glBindVertexArray(monsterVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, monsterVBO);
+	glEnableVertexAttribArray(VERTEX_ATTR_POSITION);
+	glEnableVertexAttribArray(VERTEX_ATTR_NORMAL);
+	glEnableVertexAttribArray(VERTEX_ATTR_TEXTURE);
+	glVertexAttribPointer(VERTEX_ATTR_POSITION, 3, GL_FLOAT, GL_FALSE, sizeof(ShapeVertex), 0);
+	glVertexAttribPointer(VERTEX_ATTR_NORMAL, 3, GL_FLOAT, GL_FALSE, sizeof(ShapeVertex),(const GLvoid*)(offsetof(ShapeVertex, normal)));
+	glVertexAttribPointer(VERTEX_ATTR_TEXTURE, 2, GL_FLOAT, GL_FALSE, sizeof(ShapeVertex),(const GLvoid*)(offsetof(ShapeVertex, texCoords)));
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
 
     cubeProgram.m_Program.use();
     MasterCraftCamera mc(W/2, heightMap2DArray[W/2][H/2] + 2, H/2);
@@ -398,7 +430,10 @@ int main(int argc, char** argv) {
         superChunk.updatePos(pos3D);
         superChunk.render(world, cubeProgram, ProjMatrix, viewMatrix, textures);
 
-
+		// draw the monsters
+		glBindVertexArray(monsterVAO);
+		mons.render(cubeProgram, ProjMatrix, viewMatrix, n);
+		mons.move();
 
         glBindVertexArray(0);
         windowManager.swapBuffers();

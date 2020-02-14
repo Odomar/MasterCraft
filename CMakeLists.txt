@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 
 project(ImacGL)
 
-add_definitions(-std=c++11)
+add_definitions(-std=c++17)
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake)
 set(OpenGL_GL_PREFERENCE GLVND)
