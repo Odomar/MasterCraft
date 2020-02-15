@@ -21,6 +21,9 @@
 #include <glimac/Color.hpp>
 #include <glimac/CubeProgram.hpp>
 #include <glimac/Monster.hpp>
+#include <thread>
+
+#define FRAMERATE 60
 
 using namespace glimac;
 using namespace std;
@@ -232,7 +235,25 @@ int main(int argc, char** argv) {
 
     //---------------- Application loop --------------------//
 
+	std::chrono::system_clock::time_point a;
+	std::chrono::system_clock::time_point b = std::chrono::system_clock::now();
+	constexpr float duration_ms = (1. / FRAMERATE) * 1000.;
+	std::cout << "loop duration : " << duration_ms << std::endl;
+
     while(!done) {
+    	// sleep if framerate is too high
+		a = std::chrono::system_clock::now();
+		std::chrono::duration<double, std::milli> work_time = a - b;
+
+		if (work_time.count() < duration_ms)
+		{
+			std::chrono::duration<double, std::milli> delta_ms(duration_ms - work_time.count());
+			auto delta_ms_duration = std::chrono::duration_cast<std::chrono::milliseconds>(delta_ms);
+			std::this_thread::sleep_for(std::chrono::milliseconds(delta_ms_duration.count()));
+		}
+
+		b = std::chrono::system_clock::now();
+		std::chrono::duration<double, std::milli> sleep_time = b - a;
 
         /*glm::vec3 pos3D = player.getPosition();
         player.computeDirectionVectors();
