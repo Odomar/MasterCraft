@@ -27,7 +27,8 @@ void glimac::Monster::render(CubeProgram & cubeProgram, glm::mat4 & ProjMatrix, 
 	glDrawArrays(GL_TRIANGLES, 0, count);
 }
 
-void glimac::Monster::move(int W, int H) {
+void glimac::Monster::move(int W, int H, World & world) {
+	verticalCollision(world);
 	glm::vec3 oldPos = position;
 	position.x += glm::normalize(direction).x * speed;
 	position.z += glm::normalize(direction).y * speed;
@@ -60,6 +61,19 @@ void glimac::Monster::clampInWorld(int W, int H) {
 	}
 	if(position.z > H) {
 		position.z = H;
+	}
+}
+
+void glimac::Monster::verticalCollision(glimac::World & world) {
+	if (world.checkBlock(position)) {
+		while(world.checkBlock(position)){
+			position.y++;
+		}
+	}
+	else {
+		while(!world.checkBlock(position + glm::vec3(0, -1, 0))){
+			position.y--;
+		}
 	}
 }
 
