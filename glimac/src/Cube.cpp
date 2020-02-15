@@ -126,53 +126,5 @@ namespace glimac {
 		m_Vertices.push_back(ShapeVertex(glm::vec3(0., 0., 1.), glm::vec3(0., 1., 0.), glm::vec2(texCoords[5].first + OFFSET, texCoords[5].second)));
 		m_Vertices.push_back(ShapeVertex(glm::vec3(1., 0., 0.), glm::vec3(0., 1., 0.), glm::vec2(texCoords[5].first, texCoords[5].second + OFFSET)));
 		m_Vertices.push_back(ShapeVertex(glm::vec3(1., 0., 1.), glm::vec3(0., 1., 0.), glm::vec2(texCoords[5].first, texCoords[5].second)));
-
-//		// Top
-//		(1., 1.)
-//		(0., 1.)
-//		(1., 0.)
-//		(0., 1.)
-//		(1., 0.)
-//		(0., 0.)
-//
-//		// Front
-//		(1., 1.)
-//		(0., 1.)
-//		(1., 0.)
-//		(0., 1.)
-//		(1., 0.)
-//		(0., 0.)
-//
-//		// Right
-//		(0., 1.)
-//		(1., 1.)
-//		(0., 0.)
-//		(1., 1.)
-//		(0., 0.)
-//		(1., 0.)
-//
-//		// Left
-//		(1., 1.)
-//		(1., 0.)
-//		(0., 1.)
-//		(1., 0.)
-//		(0., 1.)
-//		(0., 0.)
-//
-//		// Back
-//		(0., 1.)
-//		(0., 0.)
-//		(1., 1.)
-//		(0., 0.)
-//		(1., 1.)
-//		(1., 0.)
-//
-//		// Bottom
-//		(1., 1.)
-//		(1., 0.)
-//		(0., 1.)
-//		(1., 0.)
-//		(0., 1.)
-//		(0., 0.)
 	}
 }

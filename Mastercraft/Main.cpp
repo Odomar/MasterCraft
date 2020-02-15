@@ -32,7 +32,7 @@ int main(int argc, char** argv) {
     #else
     cout << "else" << endl;
     #endif // WIN32
-
+	srand(time(NULL));
     // Initialize SDL and open a window
     /*const float windowWidth = 900.f;
     const float windowHeight = 900.f;*/
@@ -187,7 +187,7 @@ int main(int argc, char** argv) {
         }
     }
 
-	Monster mons(W/2 + 5, heightMap2DArray[W/2 + 5][H/2] + 3, H/2);
+	Monster mons(W / 2 - 5, heightMap2DArray[W / 2 + 5][H / 2] + 50, H / 2 + 5);
 	mons.initTextures(monster);
 
 	Cube monsterCube(Monster::textureCoord);
@@ -239,7 +239,7 @@ int main(int argc, char** argv) {
         viewMatrix = player.getViewMatrix();
         SDL_GetRelativeMouseState(&lastMousePosX, &lastMousePosY);
         player.updateYPos(world);*/
-        glm::vec3 pos3D = mc.getPosition();
+        pos3D = mc.getPosition();
         mc.computeDirectionVectors();
         viewMatrix = mc.getViewMatrix();
         SDL_GetRelativeMouseState(&lastMousePosX, &lastMousePosY);
@@ -433,7 +433,7 @@ int main(int argc, char** argv) {
 		// draw the monsters
 		glBindVertexArray(monsterVAO);
 		mons.render(cubeProgram, ProjMatrix, viewMatrix, n);
-		mons.move();
+		mons.move(W, H);
 
         glBindVertexArray(0);
         windowManager.swapBuffers();

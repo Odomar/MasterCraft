@@ -4,9 +4,14 @@
 
 #include <glimac/Monster.hpp>
 #include <glimac/Chunk.hpp>
+#include <algorithm>
 
-glimac::Monster::Monster(int x, int y, int z): position(glm::vec3(x, y, z)), goal(glm::vec3(10, 200, 10)) {
+#define DISTANCE_MAX 1000
 
+glimac::Monster::Monster(int x, int y, int z) : position(glm::vec3(x, y, z)) {
+	direction = glm::vec2(((float)rand())/RAND_MAX * 2. - 1., ((float)rand())/RAND_MAX * 2. - 1.);
+	std::cout << "initial position : " << position << std::endl;
+	std::cout << "initial direction : " << direction << std::endl;
 }
 
 void glimac::Monster::render(CubeProgram & cubeProgram, glm::mat4 & ProjMatrix, glm::mat4 & viewMatrix, int count) {
@@ -22,10 +27,16 @@ void glimac::Monster::render(CubeProgram & cubeProgram, glm::mat4 & ProjMatrix, 
 	glDrawArrays(GL_TRIANGLES, 0, count);
 }
 
-void glimac::Monster::move() {
-	glm::vec3 direction = goal - position;
-	glm::normalize(direction);
-	position += speed * direction;
+void glimac::Monster::move(int W, int H) {
+	glm::vec3 oldPos = position;
+	position.x += glm::normalize(direction).x * speed;
+	position.z += glm::normalize(direction).y * speed;
+	clampInWorld(W, H);
+	distance += (position - oldPos).length();
+	if (distance > DISTANCE_MAX) {
+		direction = glm::vec2(((float)rand())/RAND_MAX * 2. - 1., ((float)rand())/RAND_MAX * 2. - 1.);
+		distance = 0.;
+	}
 }
 
 void glimac::Monster::initTextures(const std::shared_ptr<Image>& image) {
@@ -35,5 +46,20 @@ void glimac::Monster::initTextures(const std::shared_ptr<Image>& image) {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+void glimac::Monster::clampInWorld(int W, int H) {
+	if(position.x < 0.) {
+		position.x = 0;
+	}
+	if(position.x > W) {
+		position.x = W;
+	}
+	if(position.z < 0.) {
+		position.z = 0.;
+	}
+	if(position.z > H) {
+		position.z = H;
+	}
 }
 
