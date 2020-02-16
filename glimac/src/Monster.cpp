@@ -6,16 +6,19 @@
 #include <glimac/Chunk.hpp>
 #include <algorithm>
 
-#define DISTANCE_MAX 1000
+#define DISTANCE_MAX 25
 
 glimac::Monster::Monster(int x, int y, int z) : position(glm::vec3(x, y, z)) {
-	direction = glm::vec2(((float)rand())/RAND_MAX * 2. - 1., ((float)rand())/RAND_MAX * 2. - 1.);
+	direction = glm::normalize(glm::diskRand(1.));
+	angle = atan2(direction.y, -direction.x) + M_PI / 2;
+	std::cout << "angle " << angle * 180 / M_PI << std::endl;
 	std::cout << "initial position : " << position << std::endl;
 	std::cout << "initial direction : " << direction << std::endl;
 }
 
 void glimac::Monster::render(CubeProgram & cubeProgram, glm::mat4 & ProjMatrix, glm::mat4 & viewMatrix, int count) {
 	glm::mat4 MVMatrix = glm::translate(viewMatrix, position);
+	MVMatrix = glm::rotate(MVMatrix, angle, glm::vec3(0, 1, 0));
 	glm::mat4 NormalMatrix = glm::transpose(glm::inverse(MVMatrix));
 	glUniformMatrix4fv(cubeProgram.uNormalMatrix, 1, GL_FALSE, glm::value_ptr(NormalMatrix));
 	glUniformMatrix4fv(cubeProgram.uMVMatrix, 1, GL_FALSE, glm::value_ptr(MVMatrix));
@@ -29,13 +32,17 @@ void glimac::Monster::render(CubeProgram & cubeProgram, glm::mat4 & ProjMatrix, 
 
 void glimac::Monster::move(int W, int H, World & world) {
 	verticalCollision(world);
-	glm::vec3 oldPos = position;
-	position.x += glm::normalize(direction).x * speed;
-	position.z += glm::normalize(direction).y * speed;
-	clampInWorld(W, H);
-	distance += (position - oldPos).length();
+	if (glm::length(direction) > 0) {
+		glm::vec3 oldPos = position;
+		position.x += glm::normalize(direction).x * speed;
+		position.z += glm::normalize(direction).y * speed;
+		clampInWorld(W, H);
+		distance += glm::length(position - oldPos);
+	}
 	if (distance > DISTANCE_MAX) {
-		direction = glm::vec2(((float)rand())/RAND_MAX * 2. - 1., ((float)rand())/RAND_MAX * 2. - 1.);
+		// TODO add idle
+		direction = glm::normalize(glm::diskRand(1.));
+		angle = atan2(direction.y, -direction.x) + M_PI / 2;
 		distance = 0.;
 	}
 }
