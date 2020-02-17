@@ -24,6 +24,7 @@
 #include <thread>
 
 #define FRAMERATE 60
+#define IA_COUNT 20
 
 using namespace glimac;
 using namespace std;
@@ -190,8 +191,14 @@ int main(int argc, char** argv) {
         }
     }
 
-	Monster mons(W / 2 - 5, heightMap2DArray[W / 2 + 5][H / 2] + 1, H / 2 + 5);
-	mons.initTextures(monster);
+	std::vector<Monster *> monsters;
+	for (int i = 0; i < IA_COUNT; i++) {
+		int x = rand() % W;
+		int y = rand() % H;
+		Monster * m = new Monster(x, heightMap2DArray[x][y], y);
+		m -> initTextures(monster);
+		monsters.push_back(m);
+	}
 
 	Cube monsterCube(Monster::textureCoord);
 	// n is the same
@@ -453,8 +460,10 @@ int main(int argc, char** argv) {
 
 		// draw the monsters
 		glBindVertexArray(monsterVAO);
-		mons.render(cubeProgram, ProjMatrix, viewMatrix, n);
-		mons.move(W, H, world);
+		for (Monster * m : monsters) {
+			m -> render(cubeProgram, ProjMatrix, viewMatrix, n);
+			m -> move(W, H, world);
+		}
 
         glBindVertexArray(0);
         windowManager.swapBuffers();

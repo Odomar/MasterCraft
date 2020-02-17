@@ -16,6 +16,7 @@ namespace glimac {
 		void move(int W, int H, glimac::World & world);
 		void clampInWorld(int W, int H);
 		void verticalCollision(glimac::World & world);
+		void changeDirection(glm::vec2 vector);
 	private:
 		glm::vec3 position;
 		glm::vec2 direction;

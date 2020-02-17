@@ -9,8 +9,7 @@
 #define DISTANCE_MAX 25
 
 glimac::Monster::Monster(int x, int y, int z) : position(glm::vec3(x, y, z)) {
-	direction = glm::normalize(glm::diskRand(1.));
-	angle = atan2(direction.y, -direction.x) + M_PI / 2;
+	changeDirection(glm::normalize(glm::diskRand(1.)));
 	std::cout << "angle " << angle * 180 / M_PI << std::endl;
 	std::cout << "initial position : " << position << std::endl;
 	std::cout << "initial direction : " << direction << std::endl;
@@ -41,8 +40,7 @@ void glimac::Monster::move(int W, int H, World & world) {
 	}
 	if (distance > DISTANCE_MAX) {
 		// TODO add idle
-		direction = glm::normalize(glm::diskRand(1.));
-		angle = atan2(direction.y, -direction.x) + M_PI / 2;
+		changeDirection(glm::normalize(glm::diskRand(1.)));
 		distance = 0.;
 	}
 }
@@ -58,16 +56,20 @@ void glimac::Monster::initTextures(const std::shared_ptr<Image>& image) {
 
 void glimac::Monster::clampInWorld(int W, int H) {
 	if(position.x < 0.) {
-		position.x = 0;
+		position.x = 1;
+		changeDirection(glm::vec2(-direction.x, direction.y));
 	}
 	if(position.x > W) {
-		position.x = W;
+		position.x = W - 1;
+		changeDirection(glm::vec2(-direction.x, direction.y));
 	}
 	if(position.z < 0.) {
-		position.z = 0.;
+		position.z = 1.;
+		changeDirection(glm::vec2(direction.x, -direction.y));
 	}
 	if(position.z > H) {
-		position.z = H;
+		position.z = H - 1;
+		changeDirection(glm::vec2(direction.x, -direction.y));
 	}
 }
 
@@ -84,3 +86,7 @@ void glimac::Monster::verticalCollision(glimac::World & world) {
 	}
 }
 
+void glimac::Monster::changeDirection(glm::vec2 vector) {
+	direction = glm::normalize(vector);
+	angle = atan2(direction.y, -direction.x) + M_PI / 2;
+}
