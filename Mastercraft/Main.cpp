@@ -273,6 +273,62 @@ int main(int argc, char** argv) {
         SDL_GetRelativeMouseState(&lastMousePosX, &lastMousePosY);
         //mc.updateYPos(world);
 
+		/*********************************
+		 * HERE SHOULD COME THE RENDERING CODE
+		 *********************************/
+
+		glBindVertexArray(vao);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		//---------------- skybox and lightning TO OPTIMIZE --------------------//
+
+		//Set light (sun)
+		//glm::vec4 lightMMatrix =  glm::rotate(glm::mat4(1.), 1.7f, glm::vec3(1, 1, 1)) * glm::vec4(128, 80, 128, 0);
+		glm::vec4 lightMMatrix =  glm::rotate(glm::mat4(1), windowManager.getTime() / 5, glm::vec3(0, 0, 1)) * glm::vec4(16 * 8 * 4, 128, 16 * 8 * 4, 0);
+		//glm::vec4 lightMMatrix =  glm::rotate(glm::mat4(1), windowManager.getTime() / 10, glm::vec3(0, 0, 1)) * glm::vec4(128, 8000, -128, 0);
+		//glm::vec4 lightMVMatrix = viewMatrix * lightMMatrix;
+		glm::vec4 lightMVMatrix = viewMatrix * lightMMatrix;
+
+		// draw the skybox and init light coeffs according the time
+		glm::vec3 direction = mc.getFrontVector() + mc.getLeftVector() + mc.getUpVector();
+		MVMatrix = glm::scale(viewMatrix, glm::vec3(1, 1, 1));
+		MVMatrix = glm::translate(MVMatrix, mc.getPosition() - glm::vec3(0.5, 0.5, 0.5));
+		NormalMatrix = glm::transpose(glm::inverse(MVMatrix));
+		glUniformMatrix4fv(cubeProgram.uNormalMatrix, 1, GL_FALSE , glm::value_ptr(NormalMatrix));
+		glUniformMatrix4fv(cubeProgram.uMVMatrix, 1, GL_FALSE , glm::value_ptr(MVMatrix));
+		glUniformMatrix4fv(cubeProgram.uMVPMatrix, 1, GL_FALSE , glm::value_ptr(ProjMatrix * MVMatrix));
+		glActiveTexture(GL_TEXTURE0);
+
+        if (lightMMatrix.y < 0){
+            isNight = true;
+        }
+        if (lightMMatrix.y > 0){
+            isNight = false;
+        }
+		if(!isNight) {
+			glUniform3fv(cubeProgram.uTextureKd, 1, glm::value_ptr(glm::vec3(1., 1., 1.)));
+			glUniform3fv(cubeProgram.uTextureKs, 1, glm::value_ptr(glm::vec3(0., 0., 0.)));
+			glUniform1f(cubeProgram.uTextureShininess, 64.);
+			glUniform3fv(cubeProgram.uLightDir_vs, 1, glm::value_ptr(lightMVMatrix));
+			glUniform3fv(cubeProgram.uLightIntensity, 1, glm::value_ptr(glm::vec3(0.5, 0.5, 0.5)));
+			glUniform3fv(cubeProgram.uLightAmbient, 1, glm::value_ptr(glm::vec3(0.5, 0.5, 0.5)));
+			glBindTexture(GL_TEXTURE_2D, skyTextures[0]);
+		}
+		else {
+			glUniform3fv(cubeProgram.uTextureKd, 1, glm::value_ptr(glm::vec3(0.0, 0.0, 0.0)));
+			glUniform3fv(cubeProgram.uTextureKs, 1, glm::value_ptr(glm::vec3(0.2, 0.2, 0.2)));
+			glUniform1f(cubeProgram.uTextureShininess, 32.);
+			glUniform3fv(cubeProgram.uLightDir_vs, 1, glm::value_ptr(lightMVMatrix));
+			glUniform3fv(cubeProgram.uLightIntensity, 1, glm::value_ptr(glm::vec3(0.0, 0.0, 0.0)));
+			glUniform3fv(cubeProgram.uLightAmbient, 1, glm::value_ptr(glm::vec3(0.15, 0.15, 0.2)));
+			glBindTexture(GL_TEXTURE_2D, skyTextures[1]);
+		}
+		glUniform1i(cubeProgram.uTexture, 0);
+		glDepthMask(GL_FALSE);
+//		glDrawArrays(GL_TRIANGLES, 0, 6);
+		glDrawArrays(GL_TRIANGLES, 0, n);
+		glDepthMask(GL_TRUE);
+
         // Event loop:
         SDL_Event e;
         while(windowManager.pollEvent(e)) {
@@ -402,59 +458,7 @@ int main(int argc, char** argv) {
             }
         }*/
 
-        /*********************************
-         * HERE SHOULD COME THE RENDERING CODE
-         *********************************/
-
-        glBindVertexArray(vao);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        //---------------- skybox and lightning TO OPTIMIZE --------------------//
-
-        //Set light (sun)
-        //glm::vec4 lightMMatrix =  glm::rotate(glm::mat4(1.), 1.7f, glm::vec3(1, 1, 1)) * glm::vec4(128, 80, 128, 0);
-        glm::vec4 lightMMatrix =  glm::rotate(glm::mat4(1), windowManager.getTime() / 5, glm::vec3(0, 0, 1)) * glm::vec4(16 * 8 * 4, 128, 16 * 8 * 4, 0);
-        //glm::vec4 lightMMatrix =  glm::rotate(glm::mat4(1), windowManager.getTime() / 10, glm::vec3(0, 0, 1)) * glm::vec4(128, 8000, -128, 0);
-        //glm::vec4 lightMVMatrix = viewMatrix * lightMMatrix;
-        glm::vec4 lightMVMatrix = viewMatrix * lightMMatrix;
-
-        // draw the skybox and init light coeffs according the time
-        MVMatrix = glm::scale(viewMatrix, glm::vec3((float)W, 256, float(H)));
-        glm::mat4 NormalMatrix = glm::transpose(glm::inverse(MVMatrix));
-        glUniformMatrix4fv(cubeProgram.uNormalMatrix, 1, GL_FALSE , glm::value_ptr(NormalMatrix));
-        glUniformMatrix4fv(cubeProgram.uMVMatrix, 1, GL_FALSE , glm::value_ptr(MVMatrix));
-        glUniformMatrix4fv(cubeProgram.uMVPMatrix, 1, GL_FALSE , glm::value_ptr(ProjMatrix * MVMatrix));
-        glActiveTexture(GL_TEXTURE0);
-
-        if (lightMMatrix.y < 0){
-            isNight = true;
-        }
-        if (lightMMatrix.y > 0){
-            isNight = false;
-        }
-        if(!isNight) {
-            glUniform3fv(cubeProgram.uTextureKd, 1, glm::value_ptr(glm::vec3(1., 1., 1.)));
-            glUniform3fv(cubeProgram.uTextureKs, 1, glm::value_ptr(glm::vec3(0., 0., 0.)));
-            glUniform1f(cubeProgram.uTextureShininess, 64.);
-            glUniform3fv(cubeProgram.uLightDir_vs, 1, glm::value_ptr(lightMVMatrix));
-            glUniform3fv(cubeProgram.uLightIntensity, 1, glm::value_ptr(glm::vec3(0.5, 0.5, 0.5)));
-            glUniform3fv(cubeProgram.uLightAmbient, 1, glm::value_ptr(glm::vec3(0.5, 0.5, 0.5)));
-            glBindTexture(GL_TEXTURE_2D, skyTextures[0]);
-        }
-        else {
-            glUniform3fv(cubeProgram.uTextureKd, 1, glm::value_ptr(glm::vec3(0.0, 0.0, 0.0)));
-            glUniform3fv(cubeProgram.uTextureKs, 1, glm::value_ptr(glm::vec3(0.2, 0.2, 0.2)));
-            glUniform1f(cubeProgram.uTextureShininess, 32.);
-            glUniform3fv(cubeProgram.uLightDir_vs, 1, glm::value_ptr(lightMVMatrix));
-            glUniform3fv(cubeProgram.uLightIntensity, 1, glm::value_ptr(glm::vec3(0.0, 0.0, 0.0)));
-            glUniform3fv(cubeProgram.uLightAmbient, 1, glm::value_ptr(glm::vec3(0.15, 0.15, 0.2)));
-            glBindTexture(GL_TEXTURE_2D, skyTextures[1]);
-        }
-        glUniform1i(cubeProgram.uTexture, 0);
-        glDrawArrays(GL_TRIANGLES, 0, 6);
-        glDrawArrays(GL_TRIANGLES, 12, n);
-
-        //---------------- world rendering --------------------//
+		//---------------- world rendering --------------------//
         superChunk.updatePos(pos3D);
         superChunk.render(world, cubeProgram, ProjMatrix, viewMatrix, textures);
 
