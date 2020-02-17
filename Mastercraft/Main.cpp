@@ -89,10 +89,10 @@ int main(int argc, char** argv) {
     }
     // Day sky texture loading
     std::shared_ptr<Image> monster = loadImage("../MasterCraft/Mastercraft/assets/textures/monster.png");
-//    if(monster == NULL) {
-//        std::cerr << "Can't load monster's textures" << std::endl;
-//        return EXIT_FAILURE;
-//    }
+    if(monster == NULL) {
+        std::cerr << "Can't load monster's textures" << std::endl;
+        return EXIT_FAILURE;
+    }
 
     glm::vec4* terrainPixels = terrain->getPixels();
     glm::vec4* heightMapPixels = heightMap->getPixels();
