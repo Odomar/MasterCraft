@@ -14,9 +14,6 @@ namespace glimac {
 		void render(CubeProgram & cubeProgram, glm::mat4 & ProjMatrix, glm::mat4 & viewMatrix, int count);
 		inline constexpr static std::pair<float, float> textureCoord[6] = {{0, 0}, {16./256., 0}, {32./256., 0}, {48./256., 0}, {64./256., 0}, {80./256., 0}};
 		void move(int W, int H, glimac::World & world);
-		void clampInWorld(int W, int H);
-		void verticalCollision(glimac::World & world);
-		void changeDirection(glm::vec2 vector);
 	private:
 		glm::vec3 position;
 		glm::vec2 direction;
@@ -25,5 +22,10 @@ namespace glimac {
 		float goal;
 		float angle;
 		GLuint textures;
+
+		bool clampInWorld(glm::vec3 & next, int W, int H);
+		bool collision(glimac::World & world, glm::vec3 & next, int W, int H);
+		void changeDirection(glm::vec2 vector);
+		void stop();
 	};
 }

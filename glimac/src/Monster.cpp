@@ -14,7 +14,7 @@
 #define MAX_PROBA 100
 
 glimac::Monster::Monster(int x, int y, int z) : position(glm::vec3(x, y, z)), goal(rand() % DISTANCE_MAX) {
-	changeDirection(glm::normalize(glm::diskRand(1.)));
+	stop();
 	std::cout << "angle " << angle * 180 / M_PI << std::endl;
 	std::cout << "initial position : " << position << std::endl;
 	std::cout << "initial direction : " << direction << std::endl;
@@ -35,13 +35,16 @@ void glimac::Monster::render(CubeProgram & cubeProgram, glm::mat4 & ProjMatrix, 
 }
 
 void glimac::Monster::move(int W, int H, World & world) {
-	verticalCollision(world);
 	if (glm::length(direction) > 0) {
-		glm::vec3 oldPos = position;
-		position.x += glm::normalize(direction).x * speed;
-		position.z += glm::normalize(direction).y * speed;
-		clampInWorld(W, H);
-		distance += glm::length(position - oldPos);
+		glm::vec3 next;
+		next.x = position.x + glm::normalize(direction).x * speed;
+		next.y = position.y;
+		next.z = position.z + glm::normalize(direction).y * speed;
+		if(collision(world, next, W, H)) {
+			glm::vec3 oldPos = position;
+			position = next;
+			distance += glm::length(position - oldPos);
+		}
 	}
 	else {
 		if(rand() % MAX_PROBA >= IDLE_PROBA) {
@@ -49,9 +52,7 @@ void glimac::Monster::move(int W, int H, World & world) {
 		}
 	}
 	if (distance > goal) {
-		direction = glm::vec2(0, 0);
-		distance = 0.;
-		goal = rand() % DISTANCE_MAX;
+		stop();
 	}
 }
 
@@ -64,39 +65,50 @@ void glimac::Monster::initTextures(const std::shared_ptr<Image>& image) {
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void glimac::Monster::clampInWorld(int W, int H) {
-	if(position.x < 0.) {
-		position.x = 1;
-		changeDirection(glm::vec2(-direction.x, direction.y));
+bool glimac::Monster::clampInWorld(glm::vec3 & next, int W, int H) {
+	if(next.x < 0. || next.x >= W || next.z < 0. || next.z >= H) {
+		// prevent going outside of the world
+		stop();
+		return false;
 	}
-	if(position.x > W) {
-		position.x = W - 1;
-		changeDirection(glm::vec2(-direction.x, direction.y));
-	}
-	if(position.z < 0.) {
-		position.z = 1.;
-		changeDirection(glm::vec2(direction.x, -direction.y));
-	}
-	if(position.z > H) {
-		position.z = H - 1;
-		changeDirection(glm::vec2(direction.x, -direction.y));
-	}
+	return true;
 }
 
-void glimac::Monster::verticalCollision(glimac::World & world) {
-	if (world.checkBlock(position)) {
-		while(world.checkBlock(position)){
-			position.y++;
+bool glimac::Monster::collision(glimac::World & world, glm::vec3 & next, int W, int H) {
+	if (clampInWorld(next, W, H)) {
+		if (world.checkBlock(next)) {
+			// next block is a not air
+			if(world.checkBlock(next + glm::vec3(0, 1, 0))){
+				// block above is not ait either
+				// => stop, compute new direction/angle
+				stop();
+				return false;
+			}
+			else {
+				// only one block diff, grind it
+				next.y++;
+				return true;
+			}
+		}
+		else {
+			// next block is air
+			while(!world.checkBlock(next + glm::vec3(0, -1, 0))){
+				// fall until non air block
+				next.y--;
+			}
+			return true;
 		}
 	}
-	else {
-		while(!world.checkBlock(position + glm::vec3(0, -1, 0))){
-			position.y--;
-		}
-	}
+	return false;
 }
 
 void glimac::Monster::changeDirection(glm::vec2 vector) {
 	direction = glm::normalize(vector);
 	angle = atan2(direction.y, -direction.x) + M_PI / 2;
+}
+
+void glimac::Monster::stop() {
+	direction = glm::vec2(0, 0);
+	distance = 0.;
+	goal = rand() % DISTANCE_MAX;
 }
