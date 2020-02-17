@@ -22,6 +22,7 @@ namespace glimac {
 		glm::vec2 direction;
 		float speed = 0.05;
 		float distance = 0;
+		float goal;
 		float angle;
 		GLuint textures;
 	};

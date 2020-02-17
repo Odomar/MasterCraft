@@ -6,9 +6,14 @@
 #include <glimac/Chunk.hpp>
 #include <algorithm>
 
-#define DISTANCE_MAX 25
+// Maximum distance that can be randomly drawn
+#define DISTANCE_MAX 50
+// Probability to stay idle at each frame (out of MAX_PROBA)
+// 99/100 ? 999/1000 ?
+#define IDLE_PROBA 99
+#define MAX_PROBA 100
 
-glimac::Monster::Monster(int x, int y, int z) : position(glm::vec3(x, y, z)) {
+glimac::Monster::Monster(int x, int y, int z) : position(glm::vec3(x, y, z)), goal(rand() % DISTANCE_MAX) {
 	changeDirection(glm::normalize(glm::diskRand(1.)));
 	std::cout << "angle " << angle * 180 / M_PI << std::endl;
 	std::cout << "initial position : " << position << std::endl;
@@ -38,10 +43,15 @@ void glimac::Monster::move(int W, int H, World & world) {
 		clampInWorld(W, H);
 		distance += glm::length(position - oldPos);
 	}
-	if (distance > DISTANCE_MAX) {
-		// TODO add idle
-		changeDirection(glm::normalize(glm::diskRand(1.)));
+	else {
+		if(rand() % MAX_PROBA >= IDLE_PROBA) {
+			changeDirection(glm::normalize(glm::diskRand(1.)));
+		}
+	}
+	if (distance > goal) {
+		direction = glm::vec2(0, 0);
 		distance = 0.;
+		goal = rand() % DISTANCE_MAX;
 	}
 }
 
