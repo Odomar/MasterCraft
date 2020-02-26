@@ -13,6 +13,8 @@
 #define IDLE_PROBA 99
 #define MAX_PROBA 100
 
+constexpr std::pair<float, float> glimac::Monster::textureCoord[6];
+
 glimac::Monster::Monster(int x, int y, int z) : position(glm::vec3(x, y, z)), goal(rand() % DISTANCE_MAX) {
 	stop();
 	std::cout << "angle " << angle * 180 / M_PI << std::endl;
