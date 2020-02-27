@@ -87,7 +87,7 @@ namespace glimac {
             // Inverser y et z, renverse le cube
 
             // top -> front  OK
-            if(y < SIZE_CHUNK_Y - 1 && blocks[x][y + 1][z] == - 1) {
+            if((y < SIZE_CHUNK_Y - 1 && blocks[x][y + 1][z] == - 1) || y == SIZE_CHUNK_Y - 1) {
                 vertices[i++] = ShapeVertex(glm::vec3(x, z, y + 1), glm::vec3(0., 0., 1.), glm::vec2(texturesCoord[1].first, texturesCoord[1].second + OFFSET));
                 vertices[i++] = ShapeVertex(glm::vec3(x, z + 1, y + 1), glm::vec3(0., 0., 1.), glm::vec2(texturesCoord[1].first, texturesCoord[1].second));
                 vertices[i++] = ShapeVertex(glm::vec3(x + 1, z + 1, y + 1), glm::vec3(0., 0., 1.), glm::vec2(texturesCoord[1].first + OFFSET, texturesCoord[1].second));
@@ -97,7 +97,7 @@ namespace glimac {
             }
 
             //front -> bottom
-            if(z > 0 && blocks[x][y][z - 1] == - 1) {
+            if((z > 0 && blocks[x][y][z - 1] == - 1) || z == 0) {
                 vertices[i++] = ShapeVertex(glm::vec3(x, z, y), glm::vec3(0., 1., 0.), glm::vec2(texturesCoord[5].first, texturesCoord[5].second + OFFSET));
                 vertices[i++] = ShapeVertex(glm::vec3(x, z, y + 1), glm::vec3(0., 1., 0.), glm::vec2(texturesCoord[5].first, texturesCoord[5].second));
                 vertices[i++] = ShapeVertex(glm::vec3(x + 1, z, y), glm::vec3(0., 1., 0.), glm::vec2(texturesCoord[5].first + OFFSET, texturesCoord[5].second + OFFSET));
@@ -107,7 +107,7 @@ namespace glimac {
             }
 
             // right -> right
-            if(x < SIZE_CHUNK_X - 1 && blocks[x + 1][y][z] == - 1) {
+            if((x < SIZE_CHUNK_X - 1 && blocks[x + 1][y][z] == - 1) || x == SIZE_CHUNK_X - 1) {
                 vertices[i++] = ShapeVertex(glm::vec3(x + 1, z, y), glm::vec3(1., 0., 0.), glm::vec2(texturesCoord[2].first, texturesCoord[2].second + OFFSET));
                 vertices[i++] = ShapeVertex(glm::vec3(x + 1, z, y + 1), glm::vec3(1., 0., 0.), glm::vec2(texturesCoord[2].first + OFFSET, texturesCoord[2].second + OFFSET));
                 vertices[i++] = ShapeVertex(glm::vec3(x + 1, z + 1, y), glm::vec3(1., 0., 0.), glm::vec2(texturesCoord[2].first, texturesCoord[2].second));
@@ -117,7 +117,7 @@ namespace glimac {
             }
 
             // left -> left
-            if(x > 0 && blocks[x - 1][y][z] == - 1) {
+            if((x > 0 && blocks[x - 1][y][z] == - 1) || x == 0) {
                 vertices[i++] = ShapeVertex(glm::vec3(x, z, y), glm::vec3(1., 0., 0.), glm::vec2(texturesCoord[3].first + OFFSET, texturesCoord[3].second + OFFSET));
                 vertices[i++] = ShapeVertex(glm::vec3(x, z + 1, y), glm::vec3(1., 0., 0.), glm::vec2(texturesCoord[3].first + OFFSET, texturesCoord[3].second));
                 vertices[i++] = ShapeVertex(glm::vec3(x, z, y + 1), glm::vec3(1., 0., 0.), glm::vec2(texturesCoord[3].first, texturesCoord[3].second + OFFSET));
@@ -127,7 +127,7 @@ namespace glimac {
             }
 
             // back -> top
-            if(z < SIZE_CHUNK_Z - 1 && blocks[x][y][z + 1] == - 1) {
+            if((z < SIZE_CHUNK_Z - 1 && blocks[x][y][z + 1] == - 1) || z == SIZE_CHUNK_Z - 1) {
                 vertices[i++] = ShapeVertex(glm::vec3(x, z + 1, y), glm::vec3(0., 1., 0.), glm::vec2(texturesCoord[0].first + OFFSET, texturesCoord[0].second + OFFSET));
                 vertices[i++] = ShapeVertex(glm::vec3(x, z + 1, y + 1), glm::vec3(0., 1., 0.), glm::vec2(texturesCoord[0].first + OFFSET, texturesCoord[0].second));
                 vertices[i++] = ShapeVertex(glm::vec3(x + 1, z + 1, y + 1), glm::vec3(0., 1., 0.), glm::vec2(texturesCoord[0].first, texturesCoord[0].second));
@@ -137,7 +137,7 @@ namespace glimac {
             }
 
             // bottom -> back
-            if(y > 0 && blocks[x][y - 1][z] == - 1) {
+            if((y > 0 && blocks[x][y - 1][z] == - 1) || y == 0) {
                 vertices[i++] = ShapeVertex(glm::vec3(x, z, y), glm::vec3(0., 0., 1.), glm::vec2(texturesCoord[4].first + OFFSET, texturesCoord[4].second + OFFSET));
                 vertices[i++] = ShapeVertex(glm::vec3(x, z + 1, y), glm::vec3(0., 0., 1.), glm::vec2(texturesCoord[4].first + OFFSET, texturesCoord[4].second));
                 vertices[i++] = ShapeVertex(glm::vec3(x + 1, z + 1, y), glm::vec3(0., 0., 1.), glm::vec2(texturesCoord[4].first, texturesCoord[4].second));
