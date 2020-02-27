@@ -24,6 +24,10 @@ namespace glimac {
         GLint uLightIntensity;
         GLint uLightAmbient;
 
+        GLint uLightPos_vs;
+        GLint uPointLightIntensity;
+
+
         CubeProgram(const FilePath& applicationPath):
             m_Program(loadProgram(applicationPath.dirPath() + "shaders/3D.vs.glsl",
                                   applicationPath.dirPath() + "shaders/3D2Light.fs.glsl")) {
@@ -38,6 +42,9 @@ namespace glimac {
             uLightDir_vs = glGetUniformLocation(m_Program.getGLId(), "uLightDir_vs");
             uLightIntensity = glGetUniformLocation(m_Program.getGLId(), "uLightIntensity");
             uLightAmbient = glGetUniformLocation(m_Program.getGLId(), "uLightAmbient");
+
+            uPointLightIntensity = glGetUniformLocation(m_Program.getGLId(), "uPointLightIntensity");
+            uLightPos_vs = glGetUniformLocation(m_Program.getGLId(), "uLightPos_vs");
         }
     };
 }
