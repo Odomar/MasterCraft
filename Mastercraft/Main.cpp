@@ -21,9 +21,8 @@
 #include <glimac/Chunk.hpp>
 #include <glimac/Color.hpp>
 #include <glimac/CubeProgram.hpp>
-#include <glimac/SkyBoxProgram.hpp>
+#include <glimac/SkyboxProgram.hpp>
 #include <glimac/Monster.hpp>
-
 #include <thread>
 
 #define FRAMERATE 60
@@ -61,37 +60,37 @@ int main(int argc, char** argv) {
     }
 
     // blocks texture loading
-    std::unique_ptr<Image> blocksAtlas = loadImage("assets/textures/BlockAtlas.png");
+    std::unique_ptr<Image> blocksAtlas = loadImage("../MasterCraft/Mastercraft/assets/textures/BlockAtlas.png");
     if(blocksAtlas == NULL) {
         std::cerr << "Can't load blocks atlas textures" << std::endl;
         return EXIT_FAILURE;
     }
     // Terrain map loading
-    std::unique_ptr<Image> terrain = loadImage("assets/maps/terrain3_bis.png");
+    std::unique_ptr<Image> terrain = loadImage("../MasterCraft/Mastercraft/assets/maps/terrain3_bis.png");
     if(terrain == NULL) {
         std::cerr << "Can't load terrain's map" << std::endl;
         return EXIT_FAILURE;
     }
     // Height map loading
-    std::unique_ptr<Image> heightMap = loadImage("assets/maps/heightMap3.png");
+    std::unique_ptr<Image> heightMap = loadImage("../MasterCraft/Mastercraft/assets/maps/heightMap3.png");
     if(heightMap == NULL) {
         std::cerr << "Can't load height's map" << std::endl;
         return EXIT_FAILURE;
     }
     // Monster texture loading
-    std::shared_ptr<Image> monster = loadImage("assets/textures/monster.png");
+    std::shared_ptr<Image> monster = loadImage("../MasterCraft/Mastercraft/assets/textures/monster.png");
     if(monster == NULL) {
         std::cerr << "Can't load monster's textures" << std::endl;
         return EXIT_FAILURE;
     }
     // Day texture loading
-    std::unique_ptr<Image> skyboxDay = loadImage("assets/textures/skybox.PNG");
+    std::unique_ptr<Image> skyboxDay = loadImage("../MasterCraft/Mastercraft/assets/textures/skybox.PNG");
     if(skyboxDay == NULL) {
         std::cerr << "Can't load day skybox's textures map" << std::endl;
         return EXIT_FAILURE;
     }
     // Night texture loading
-    std::unique_ptr<Image> skyboxNight = loadImage("assets/textures/night.png");
+    std::unique_ptr<Image> skyboxNight = loadImage("../MasterCraft/Mastercraft/assets/textures/night.PNG");
     if(skyboxNight == NULL) {
         std::cerr << "Can't load night skybox's textures map" << std::endl;
         return EXIT_FAILURE;
