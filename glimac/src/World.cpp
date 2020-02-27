@@ -62,10 +62,28 @@ namespace glimac {
     }
 
     void World::createTree(const int& i, const int& j, const int& k) {
+        //Tronc
         chunks[i / chunkNumberX][j / chunkNumberY][k / 16]->setBlock(i % 16, j % 16, k % 16, 5);
         chunks[i / chunkNumberX][j / chunkNumberY][(k + 1) / 16]->setBlock(i % 16, j % 16, (k + 1) % 16, 5);
         chunks[i / chunkNumberX][j / chunkNumberY][(k + 2) / 16]->setBlock(i % 16, j % 16, (k + 2) % 16, 5);
         chunks[i / chunkNumberX][j / chunkNumberY][(k + 3) / 16]->setBlock(i % 16, j % 16, (k + 3) % 16, 5);
+        //Feuillage
+        for(int l = i - 2; l <= i + 2; l++) {
+            for(int m = j - 2; m <= j + 2; m++) {
+                if(l != i || m != j)
+                    chunks[l / chunkNumberX][m / chunkNumberY][(k + 3) / 16]->setBlock(l % 16, m % 16, (k + 3) % 16, 3);
+            }
+        }
+        for(int l = i - 2; l <= i + 2; l++) {
+            for(int m = j - 2; m <= j + 2; m++) {
+                chunks[l / chunkNumberX][m / chunkNumberY][(k + 4) / 16]->setBlock(l % 16, m % 16, (k + 4) % 16, 3);
+            }
+        }
+        for(int l = i - 1; l <= i + 1; l++) {
+            for(int m = j - 1; m <= j + 1; m++) {
+                chunks[l / chunkNumberX][m / chunkNumberY][(k + 5) / 16]->setBlock(l % 16, m % 16, (k + 5) % 16, 3);
+            }
+        }
     }
 
     void World::addDecors(unsigned char** worldHeightArray, Color** worldTerrainArray) {
