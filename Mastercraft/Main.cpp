@@ -241,6 +241,8 @@ int main(int argc, char** argv) {
     //glm::vec3 pos3D = player.getPosition();
     SuperChunk superChunk(pos3D.x / 16, pos3D.z / 16, pos3D.y);
     bool isNight = false;
+    bool dayCycle = true;
+    bool ePressed = false;
     int xMouseClic, yMouseClic, dist;
     GLfloat depth;
 
@@ -297,13 +299,17 @@ int main(int argc, char** argv) {
                     mc.moveLeft(-0.6, W);
                 }
                 // set night or day
-                if(windowManager.isKeyPressed(SDLK_e)) {
-                    if(isNight)
-                        isNight = false;
-                    else
-                        isNight = true;
+                if(!ePressed && windowManager.isKeyPressed(SDLK_e)) {
+					isNight = !isNight;
+					dayCycle = !dayCycle;
+					ePressed = true;
                 }
             }
+			if(e.type == SDL_KEYUP) {
+				if(ePressed && e.key.keysym.sym == SDLK_e) {
+					ePressed = false;
+				}
+			}
             //Mouse
             if(e.type == SDL_MOUSEMOTION) { // Mouse motion
                 SDL_GetRelativeMouseState(&lastMousePosX, &lastMousePosY);
@@ -361,14 +367,17 @@ int main(int argc, char** argv) {
 		glUniformMatrix4fv(skyBoxProgram.uMVPMatrix, 1, GL_FALSE , glm::value_ptr(ProjMatrix * MVMatrix));
 		glActiveTexture(GL_TEXTURE0);
 
-        if (lightMMatrix.y < 0){
-            glBindTexture(GL_TEXTURE_2D, skyTextures[1]);
-            isNight = true;
-        }
-        if (lightMMatrix.y > 0){
-            glBindTexture(GL_TEXTURE_2D, skyTextures[0]);
-            isNight = false;
-        }
+		if(dayCycle) {
+			isNight = lightMMatrix.y < 0;
+		}
+
+		if (isNight){
+			glBindTexture(GL_TEXTURE_2D, skyTextures[1]);
+		}
+		else {
+			glBindTexture(GL_TEXTURE_2D, skyTextures[0]);
+		}
+
         //Draw the skybox
         glUniform1i(skyBoxProgram.uTexture, 0);
 		glDepthMask(GL_FALSE);
