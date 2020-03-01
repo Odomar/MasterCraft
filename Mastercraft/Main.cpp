@@ -418,7 +418,8 @@ int main(int argc, char** argv) {
 
     glDeleteBuffers(1, &vbo);
     glDeleteVertexArrays(1, &vao);
-    //glDeleteTextures(1, skyTextures);
+    glDeleteTextures(2, skyTextures);
+    glDeleteTextures(1, &textures);
 
     return EXIT_SUCCESS;
 }

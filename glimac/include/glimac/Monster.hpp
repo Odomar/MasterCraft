@@ -13,6 +13,7 @@ namespace glimac {
 	class Monster {
 	public:
 		Monster(int x, int y, int z);
+		~Monster();
 		void initTextures(const std::shared_ptr<Image>& image);
 		void render(CubeProgram & cubeProgram, glm::mat4 & ProjMatrix, glm::mat4 & viewMatrix, int count);
 		static constexpr std::pair<float, float> textureCoord[6] = {{0, 0}, {16./256., 0}, {32./256., 0}, {48./256., 0}, {64./256., 0}, {80./256., 0}};

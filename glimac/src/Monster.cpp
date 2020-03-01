@@ -113,3 +113,7 @@ void glimac::Monster::stop() {
 	distance = 0.;
 	goal = rand() % DISTANCE_MAX;
 }
+
+glimac::Monster::~Monster() {
+	glDeleteTextures(1, &textures);
+}
