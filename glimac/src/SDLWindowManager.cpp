@@ -9,7 +9,9 @@ SDLWindowManager::SDLWindowManager(uint32_t width, uint32_t height, const char* 
         std::cerr << SDL_GetError() << std::endl;
         return;
     }
-    if(!SDL_SetVideoMode(width, height, 32, SDL_OPENGL)) {
+    // no alt+tab while fullscreen
+    // remove "| SDL_FULLSCREEN" to disable it
+    if(!SDL_SetVideoMode(width, height, 32, SDL_OPENGL | SDL_FULLSCREEN)) {
         std::cerr << SDL_GetError() << std::endl;
         return;
     }
