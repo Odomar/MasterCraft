@@ -40,8 +40,6 @@ int main(int argc, char** argv) {
     #endif // WIN32
 	srand(time(NULL));
     // Initialize SDL and open a window
-    /*const float windowWidth = 900.f;
-    const float windowHeight = 900.f;*/
     const float windowWidth = 1920.f;
     const float windowHeight = 1080.f;
     SDLWindowManager windowManager(windowWidth, windowHeight, "MasterCraft");
@@ -226,10 +224,7 @@ int main(int argc, char** argv) {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
-    //cubeProgram.m_Program.use();
     MasterCraftCamera mc(W/2, heightMap2DArray[W/2][H/2] + 2, H/2);
-    //Player player(W/2, heightMap2DArray[W/2][H/2] + 2, H/2, W, H);
-    //glm::mat4 viewMatrix = player.getViewMatrix();
     glm::mat4 viewMatrix = mc.getViewMatrix();
     glm::mat4 ProjMatrix = glm::perspective(glm::radians(70.f), windowWidth/windowHeight, 0.1f, 1000.f);
     glm::mat4 MVMatrix, NormalMatrix;
@@ -238,7 +233,6 @@ int main(int argc, char** argv) {
     World world(heightMap2DArray, terrainMap2DArray, W/16, H/16);
     world.addDecors(heightMap2DArray, terrainMap2DArray);
     glm::vec3 pos3D = mc.getPosition();
-    //glm::vec3 pos3D = player.getPosition();
     SuperChunk superChunk(pos3D.x / 16, pos3D.z / 16, pos3D.y);
     bool isNight = false;
     bool dayCycle = true;
@@ -269,7 +263,6 @@ int main(int argc, char** argv) {
 		std::chrono::duration<double, std::milli> sleep_time = b - a;
 
         SDL_GetRelativeMouseState(&lastMousePosX, &lastMousePosY);
-        //mc.updateYPos(world);
 
 		/*********************************
 		 * HERE SHOULD COME THE RENDERING CODE
@@ -353,8 +346,6 @@ int main(int argc, char** argv) {
 		//---------------- skybox and lightning TO OPTIMIZE --------------------//
 
 		skyBoxProgram.m_Program.use();
-		//Set light (sun)
-		//glm::vec4 lightMMatrix =  glm::rotate(glm::mat4(1.), 1.7f, glm::vec3(1, 1, 1)) * glm::vec4(128, 80, 128, 0);
 		glm::vec4 lightMMatrix =  glm::rotate(glm::mat4(1), windowManager.getTime() / 5, glm::vec3(0, 0, 1)) * glm::vec4(16 * 8 * 4, 128, 16 * 8 * 4, 0);
 		glm::vec4 lightMVMatrix = viewMatrix * lightMMatrix;
 

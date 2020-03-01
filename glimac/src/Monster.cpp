@@ -9,7 +9,6 @@
 // Maximum distance that can be randomly drawn
 #define DISTANCE_MAX 50
 // Probability to stay idle at each frame (out of MAX_PROBA)
-// 99/100 ? 999/1000 ?
 #define IDLE_PROBA 99
 #define MAX_PROBA 100
 

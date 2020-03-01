@@ -50,16 +50,12 @@ namespace glimac {
 	}
 
 	void MasterCraftCamera::moveLeft(float t, int limit) {
-	    //float lastYPos = m_Position.y;
 		m_Position += t * m_LeftVector;
 		maintainCameraInWorld(limit);
-		//m_Position.y = lastYPos;
 	}
 	void MasterCraftCamera::moveFront(float t, int limit) {
-	    //float lastYPos = m_Position.y;
 	    m_Position += t * m_FrontVector;
         maintainCameraInWorld(limit);
-        //m_Position.y = lastYPos;
 	}
 
 	void MasterCraftCamera::moveAbove(float t, int limit) {

@@ -36,14 +36,6 @@ namespace glimac {
 
         void render(World& world, CubeProgram& cubeProgramm, glm::mat4& ProjMatrix, glm::mat4& viewMatrix, GLuint& textures);
 
-        // Constructeur: alloue le tableau de données et construit les attributs des vertex
-        /*SuperChunk(World world, int xPos, int yPos, int zPos) {
-            memset(c, 0, sizeof(c));
-            build(world, xPos, yPos, zPos);
-        }
-        ~SuperChunk();
-        void build(World world, int xPos, int yPos, int zPos);*/
-
     private:
         //Chunk *c[SIZE_CHUNK_GROUP_X][SIZE_CHUNK_GROUP_Y][SIZE_CHUNK_GROUP_Z];
         int playerPosX;

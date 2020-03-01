@@ -73,8 +73,6 @@ namespace glimac {
         for(int y = 0; y < SIZE_CHUNK_Y; y++) {
           for(int z = 0; z < SIZE_CHUNK_Z; z++) {
             type = blocks[x][y][z];
-            //std::cout << z << std::endl;
-            //std::cout << type << std::endl;
 
             if(type == -1) { // air block
               continue;
@@ -82,7 +80,6 @@ namespace glimac {
 
             //get the textures Coordinates on Texture atlas
             texturesCoord = TexturesAtlas::getTexturesCoord(type);
-            //std::cout << texturesCoord[0].first << std::endl;
 
             // Inverser y et z, renverse le cube
 
@@ -156,7 +153,6 @@ namespace glimac {
   	}
 
   	void Chunk::renderChunk() {
-  	    //std::cout << "draw0 : " << changed << std::endl;
       if(changed) {
           updateChunk();
       }
@@ -200,7 +196,6 @@ namespace glimac {
         for(int i = 0; i < SIZE_CHUNK_X; i++) {
             for(int j = 0; j < SIZE_CHUNK_Y; j++) {
                 for(int k = 0; k < SIZE_CHUNK_Z; k++) {
-                    //os << (int)c.blocks[i][j][k].type << " ";
                     os << c.blocks[i][j][k];
                 }
             }

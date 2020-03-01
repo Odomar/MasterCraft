@@ -30,7 +30,6 @@ namespace glimac {
         if(x < 0 || x >= chunkNumberX || y < 0 || y >= chunkNumberY || z < 0 || z >= 16) {
             return;
         }
-        //glm::mat4 MVMatrix = glm::translate(viewMatrix, glm::vec3(x * 16, y * 16, z * 16));
         //pour inverser y et z
         glm::mat4 MVMatrix = glm::translate(viewMatrix, glm::vec3(x * 16, z * 16, y * 16));
 
@@ -41,7 +40,6 @@ namespace glimac {
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, textures); // dirt top
         glUniform1i(cubeProgram.uTexture, 0);
-        //std::cout << "rendering..." << std::endl;
         chunks[x][y][z]->renderChunk();
     }
 
@@ -97,11 +95,8 @@ namespace glimac {
                 if(terrain == -1) { // Maybe be there is a decor here, in this case we get the terrain (the color of the decor is : terrainColor + (r, 0, 0))
                     terrain = BlockTypes::getGroundTypeFromColor(worldTerrainArray[i][j]);
                     if(terrain != -1) {
-                        //std::cout << "decor at " << i << " " << j << " " << terrainHeight << std::endl;
                         type = DecorTypes::getType(worldTerrainArray[i][j]);
-                        //std::cout << type << std::endl;
                         if(type == 0) {
-                            //std::cout << "Create tree!" << std::endl;
                             createTree(i, j, terrainHeight);
                         }
                     }

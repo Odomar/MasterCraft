@@ -68,7 +68,6 @@ namespace glimac {
 
     bool Player::verticalCollision(World& world) {
         glm::vec3 position = getPosition();
-        //std::cout << world.checkBlock(position) << std::endl;
         if(state == FALLING) { // OK
             position.y -= 2. + FALL_SPEED;
             if(world.checkBlock(position)) {
@@ -77,14 +76,6 @@ namespace glimac {
                 return true;
             }
         }
-        /*else if (state == JUMPING){
-            if(world.checkBlock(position)) {
-                // The player hit the ceiling
-                state = FALLING;
-                std::cout << getPosition() << std::endl;
-                return 2;
-            }
-        }*/
         else { // detect if the player is falling during walking
             position.y -= 3.;
             if(!(world.checkBlock(position))) {
@@ -95,32 +86,6 @@ namespace glimac {
         }
         return false;
     }
-
-    /*bool Player::horizontalCollision(World& world, float x, float y) {
-        // check two blocks in the dir of walking
-        glm::vec3 leftVector = getLeftVector();
-        glm::vec3 position = getPosition();
-        position.y -= 1;
-        if(x != 0) {
-            if(x < 0) { // z is pressed
-                position.x -= leftVector.x * WALK_SPEED;
-            }
-            else { // s is pressed
-                position.x += leftVector.x * WALK_SPEED;
-            }
-        }
-        if(y != 0) { // q is pressed
-            if(y < 0) {
-                position.z -= leftVector.z * WALK_SPEED;
-            }
-            else { // d is pressed
-                position.z += leftVector.z * WALK_SPEED;
-            }
-        }
-        glm::vec3 position2 = position;
-        position2.y -= 1;
-        return (world.checkBlock(position) || (world.checkBlock(position2)));
-    }*/
 
     int Player::horizontalCollision(World& world, float x, float y) {
         glm::vec3 leftVector = getLeftVector();
