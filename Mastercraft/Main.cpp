@@ -70,7 +70,7 @@ int main(int argc, char** argv) {
         return EXIT_FAILURE;
     }
     // Height map loading
-    std::unique_ptr<Image> heightMap = loadImage("../MasterCraft/Mastercraft/assets/maps/heightMap3.png");
+    std::unique_ptr<Image> heightMap = loadImage("../MasterCraft/Mastercraft/assets/maps/noiseTexture.png");
     if(heightMap == NULL) {
         std::cerr << "Can't load height's map" << std::endl;
         return EXIT_FAILURE;
