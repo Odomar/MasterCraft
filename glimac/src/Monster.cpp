@@ -16,9 +16,6 @@ constexpr std::pair<float, float> glimac::Monster::textureCoord[6];
 
 glimac::Monster::Monster(int x, int y, int z) : position(glm::vec3(x, y, z)), goal(rand() % DISTANCE_MAX) {
 	stop();
-	std::cout << "angle " << angle * 180 / M_PI << std::endl;
-	std::cout << "initial position : " << position << std::endl;
-	std::cout << "initial direction : " << direction << std::endl;
 }
 
 void glimac::Monster::render(CubeProgram & cubeProgram, glm::mat4 & ProjMatrix, glm::mat4 & viewMatrix, int count) {

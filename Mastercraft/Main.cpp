@@ -35,8 +35,6 @@ int main(int argc, char** argv) {
     #ifdef _WIN32
     freopen("CON", "w", stdout);
     freopen("CON", "w", stderr);
-    #else
-    cout << "else" << endl;
     #endif // WIN32
 	srand(time(NULL));
     // Initialize SDL and open a window
@@ -245,7 +243,6 @@ int main(int argc, char** argv) {
 	std::chrono::system_clock::time_point a;
 	std::chrono::system_clock::time_point b = std::chrono::system_clock::now();
 	constexpr float duration_ms = (1. / FRAMERATE) * 1000.;
-	std::cout << "loop duration : " << duration_ms << std::endl;
 
     while(!done) {
     	// sleep if framerate is too high
@@ -315,21 +312,14 @@ int main(int argc, char** argv) {
                 viewMatrix = mc.getViewMatrix();
                 pos3D = mc.getPosition();
 
-                std::cout << windowHeight << std::endl;
                 SDL_GetMouseState(&xMouseClic, &yMouseClic);
                 glReadPixels(xMouseClic, windowHeight - yMouseClic - 1, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
-                std::cout << depth << std::endl;
 
                 glm::vec4 viewport = glm::vec4(0, 0, windowWidth, windowHeight);
                 glm::vec3 wincoord = glm::vec3(xMouseClic, windowHeight - yMouseClic - 1, depth);
                 glm::vec3 objcoord = glm::unProject(wincoord, viewMatrix, ProjMatrix, viewport);
 
-                std::cout << pos3D << std::endl;
-                std::cout << objcoord << std::endl;
                 dist = glm::distance(pos3D, objcoord);
-                cout << "selected bloc distance : " << dist << endl;
-                printf("Coordinates in object space: %f, %f, %f\n", objcoord.x, objcoord.y, objcoord.z);
-                printf("Coordinates in object space: %d, %d, %d\n",(int)objcoord.x, (int)objcoord.y, (int)objcoord.z);
                 if(dist <= 6.) { // player's reach
                     world.destroyBlock((int)(objcoord.x), (int)objcoord.z, (int)objcoord.y); // adjust objcoord coordinates to select the correct block
                 }
